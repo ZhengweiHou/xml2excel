@@ -47,7 +47,7 @@ public class MainPage implements ActionListener {
 	 */
 	public void init() {
 
-		transformServe = new TransformServe();
+		
 		
 		mainFrame = new JFrame("xml2excel"); // 主容器
 		tabPane = new JTabbedPane();// 选项卡布局
@@ -98,8 +98,12 @@ public class MainPage implements ActionListener {
 					return;// 撤销则返回
 				} else {
 					File filePath = fileSavePath.getSelectedFile();
-					transformServe.doXml2Excel(filePath, files);
-					
+					transformServe = new TransformServe();
+					String msg = transformServe.doXml2Excel(filePath, files);
+					if(msg!="0"){
+						JOptionPane.showMessageDialog(null, "导出成功："+msg, "提示",
+								JOptionPane.INFORMATION_MESSAGE);
+					}
 //					System.out.println(this.getClass().getName() + ":保存位置为"
 //							+ filePath.getAbsolutePath());
 //					System.out.println(this.getClass().getName() + ":文件个数为"
