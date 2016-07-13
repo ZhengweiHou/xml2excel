@@ -62,6 +62,19 @@ public class TransformServe {
 	 */
 	public void getHeadInfo(File[] files) {
 		for (File file : files) {
+
+			// 排除非xml文件
+//			String[] temp = file.getName().split(".");
+//			if (temp[temp.length - 1] != "xml") {
+//				continue;
+//			}
+			
+			String fileName=file.getName();
+		    String prefix=fileName.substring(fileName.lastIndexOf(".")+1);		
+			if (!prefix.equals("xml")) {
+				continue;
+			}
+
 			colIndex = -1; // 每次遍历新文件前，重置列下标
 			// 循环遍历所有文件
 			try {
@@ -114,6 +127,19 @@ public class TransformServe {
 	 */
 	public void putData(File[] files) {
 		for (File file : files) {
+
+			// 排除非xml文件
+//			String[] temp = file.getName().split(".");
+//			if (temp[temp.length - 1] != "xml") {
+//				continue;
+//			}
+			
+			String fileName=file.getName();
+		    String prefix=fileName.substring(fileName.lastIndexOf(".")+1);		
+			if (!prefix.equals("xml")) {
+				continue;
+			}
+
 			// 循环遍历所有文件
 			rowIndex++; // 每次遍历行坐标加一
 			editRow = workbook.getSheet(title).createRow(rowIndex);
@@ -207,10 +233,9 @@ public class TransformServe {
 	public void saveExcel(File filePath) {
 		OutputStream out = null;
 		try {
-			String path = filePath.getAbsolutePath() + "\\"
-					+ title 
-					+System.currentTimeMillis()
-//					+ new Timestamp(System.currentTimeMillis())
+			String path = filePath.getAbsolutePath() + "\\" + title
+					+ System.currentTimeMillis()
+					// + new Timestamp(System.currentTimeMillis())
 					+ ".xls";
 			out = new FileOutputStream(path);
 			workbook.write(out);
@@ -220,10 +245,10 @@ public class TransformServe {
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			msg = "0";
-//			e.printStackTrace();
+			// e.printStackTrace();
 		} catch (IOException e) {
 			msg = "0";
-//			e.printStackTrace();
+			// e.printStackTrace();
 		} finally {
 			try {
 				out.flush();

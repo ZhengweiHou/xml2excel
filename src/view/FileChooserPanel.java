@@ -9,10 +9,13 @@ import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import filter.MyFileFilter;
 
 /**
  * 文件选择panel
@@ -39,7 +42,8 @@ public class FileChooserPanel extends JPanel implements ActionListener {
 
 		fileJList = new JList();
 		jsp = new JScrollPane(fileJList);
-		filter = new FileNameExtensionFilter("XML file", "xml");
+		// filter = new FileNameExtensionFilter("XML file", "xml");
+		filter = new MyFileFilter();
 
 		buttonPanel = new JPanel();
 		fileChosseButton = new JButton("选择文件...");
@@ -58,16 +62,23 @@ public class FileChooserPanel extends JPanel implements ActionListener {
 			// 文件选择按钮操作
 			jfc = new JFileChooser(startFilePath);
 			jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			jfc.addChoosableFileFilter(filter);
+			// jfc.addChoosableFileFilter(filter);
+			jfc.setFileFilter(filter);
 			jfc.setMultiSelectionEnabled(true);
 			int state = jfc.showOpenDialog(null);
 			if (state == 1) {
 				return;// 撤销则返回
 			} else {
 				files = jfc.getSelectedFiles(); // 获得选择的文件
-				this.fileJList.setListData(files);
-				System.out.println(this.getClass().getName() + ":文件个数为"
-						+ files.length);
+
+				if (!this.validateFileType(files)) {
+//					this.fileJList.setListData(new String[] {"含有非法文件!"});
+					JOptionPane.showMessageDialog(null, "含有非法文件！", "警告信息",
+							JOptionPane.WARNING_MESSAGE);
+				} else {
+					this.fileJList.setListData(files);
+				}
+
 			}
 
 		} else if (e.getSource().equals(fileCleanButton)) {
@@ -77,6 +88,26 @@ public class FileChooserPanel extends JPanel implements ActionListener {
 
 		}
 
+	}
+
+	/**
+	 * 验证文件格式
+	 * 
+	 * @param files
+	 * @return
+	 */
+	public Boolean validateFileType(File[] files) {
+		for (File file : files) {
+//			String a = file.getName();
+//			String[] temp = a.split(".");
+			String fileName=file.getName();
+		    String prefix=fileName.substring(fileName.lastIndexOf(".")+1);		
+			if (!prefix.equals("xml")) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	public File[] getFiles() {
